@@ -5,3 +5,13 @@
 - 결과와 결과값을 동시에 리턴하고 싶어서 UserResponse객체를 새로 만듬 -> UserResponse에는 결과 코드, 유저 객체, 결과 메시지 등 로그인에 관한 결과를 다룸
 - UserResponse 객체에서 Message는 다른 계층에서 따로 처리할 수도 있어서 생성자 형식을 두개 만들었음.
 - 대충 로그인 백앤드 틀은 만든것 같아서 리엑트로 넘어가서 공부할 예정 -> react-app에 리엑트 서버 만듬
+
+### 26.09.10 
+- npm run dev해도 
+> react-app@0.0.0 dev
+
+> vite
+
+> sh: 1: vite: not found 
+
+로 안되는 현상 => npm install해야함
