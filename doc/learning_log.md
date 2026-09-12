@@ -26,3 +26,20 @@
 
 gredlew? ㅡ 를 통해 의존성을 추가하는 방식이라고 함
 - spring boots는 JSON을 우리가 직접 안만들어도 자동으로 자바 객체를 JSON으로 변환해서 HTTP Response를 보내준다!!
+
+
+- **문제 발생**
+Access to fetch at 'https://miniature-space-engine-9wwjw6pq7jvc9v9v-8080.app.github.dev/api/auth/login' from origin 'https://miniature-space-engine-9wwjw6pq7jvc9v9v-5173.app.github.dev' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+App.jsx:29  POST https://miniature-space-engine-9wwjw6pq7jvc9v9v-8080.app.github.dev/api/auth/login net::ERR_FAILED
+라는 에러가 떴음..
+
+- 지피티는 포트가 다른 서버가 API요청을 하면 보안상의 이유로 백엔드 서버에서 막는다고 하던데, 그걸 고치기 위해서
+1. 일단 @CrossOrigin(origins = "https://miniature-space-engine-9wwjw6pq7jvc9v9v-5173.app.github.dev") 어노테이션을 붙여줘서 브라우저에서 HTTP 요청 보내기전 자동으로 보내는 OPTION이라는 메서드의 요청을 보고 백엔드에서 예외적으로 허용을 한다... 라는 느낌의 솔루션을 시험해봄.
+- 개같이 실패
+2. **해결** : 알고보니 다른 문제였음. github codespace를 통해 개발 중인데, 깃허브 tunnel이 외부 사용자로부터 접속을 차단했기 때문에 (Private 환경이었음) localhost:8080이 다른 사용자인 localhost:5173을 인식조차 못하고 github tunnel 수준에서 막혀버린 것이 원인이 되었다.
+그러니까 순서가 깃허브의 private 인증된 브라우저 -> 코드스페이스 -> 5173으로의 tunnel(private 인증됨) -> 클라이언트가 5173으로 변경(fetch로 인해) -> 코드스페이스 -> 8080으로의 tunnel(인증 실패, 여기서 막혀서 401오류 뜬거임) -> 만약 public이어서 성공했다면 -> 8080의 CrossOrigin 필터(?) -> ... 이런 느낌이지 않을까 짐작중.
+
+- **또 알게 된 것**
+- 프론트앤드에서 fetch()를 할 때 만약 origin(schma, ip, port)가 Client와 Server이 다르다면 브라우저에서 CORS요청을 추가로 보낸다.
+- HTTP OPTION 메서드를 통해 CORS요청 (<- 이걸 perflight요청 이라고함 )을 fetch()의 HTTP (GET/Post/PUT/PATCH/DELETE)전에 받은 백엔드에서 CORS요청 헤더를 분석한다.
+- 분석 후 요청 별로 내부에서 처리한 CORS응답을 클라이언트로 보내고, 클라이언트인 브라우저에서 CORS에러를 띄우면 fetch()는 block되게 된다. -> 정확히는 브라우저가 fetch()에 응답을 전달하지 않는다.

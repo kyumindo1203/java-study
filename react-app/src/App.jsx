@@ -19,17 +19,17 @@ function App() {
     // remember는 체크박스 유지 여부입니다.
     const loginPayload = {
       serviceNumber,
-      password,
-      remember,
+      password
     }
 
     // 백엔드 URL은 Java 서버 혹은 Spring 서버의 로그인 엔드포인트 경로로 맞춰야 합니다.
     // 예시: http://localhost:8080/api/login
     // 실제 프로젝트의 서버 포트와 Controller 매핑 방식에 맞춰 변경하면 됩니다.
     try {
-      const response = await fetch('http://localhost:5173/api/login', {
+      const response = await fetch('https://miniature-space-engine-9wwjw6pq7jvc9v9v-8080.app.github.dev/api/auth/login', {
         method: 'POST',
         headers: {
+
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(loginPayload),
