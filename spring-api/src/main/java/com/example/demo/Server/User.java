@@ -5,13 +5,15 @@ import java.time.format.DateTimeFormatter;
 
 public class User {
     private String serviceNumber; //군번 형식 : YY-XXXXXXXX
+    private String name;
     private String pwd;
     private String branch; //소속 : 육/해/공
     private String rank; //계급 : 이병/ 일병/상사 /...
     private LocalDate dateOfBirth;
 
-    public User(String s, String p, String b, String r, String d){
+    public User(String s, String n, String p, String b, String r, String d){
         this.serviceNumber = s;
+        this.name = n;
         this.pwd = p;
         this.branch = b;
         this.rank = r;
@@ -24,6 +26,10 @@ public class User {
         return this.serviceNumber;
     }
 
+    public String getName(){
+        return this.name;
+    }
+    
     public String getPwd(){
         return this.pwd;
     }

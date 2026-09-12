@@ -3,7 +3,6 @@ package com.example.demo.Controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.Server.User;
 import com.example.demo.Server.UserManager;
 import com.example.demo.Server.UserResponse;
 import com.example.demo.Server.ResultCodes;
@@ -12,35 +11,39 @@ import com.example.demo.Server.ResultCodes;
 @RestController
 @RequestMapping("/api")
 public class Controller {
+    private final UserManager um;
+    public Controller(UserManager um){
+        this.um = um;
+    }
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest request){
         // {
         //     군번,
         //     비번
         // }
-        System.out.println("응답이 왔떠염!");
 
-        UserResponse ur = new UserManager().Login(request.getServiceNumber(), request.getPassword());
+        UserResponse ur = um.Login(request.getServiceNumber(), request.getPassword());
         ResultCodes rc = ur.getResultCodes();
-        User u = ur.getUser();
         String m = ur.getMessage();
         if(rc == ResultCodes.SUCCESS){
             System.out.println(m);
-            System.out.println(u.getServiceNumber()+u.getPwd());
-            return ResponseEntity.ok(u);
+            // System.out.println(u.getServiceNumber()+u.getPwd());
+            return ResponseEntity.ok(ur);
         }
         else{
             System.out.println(m);
-            return ResponseEntity.status(500).body(m);
+            return ResponseEntity.ok(ur);
         }
         
     }
-    @PostMapping("/auth/logout")
-    public String logout(){
-        return "ok";
-    }
-    @PostMapping("/users")
-    public UserLoginRequest SignUp(){
-        return new UserLoginRequest();
+
+    @PostMapping("/users") //signUp
+    public ResponseEntity<?> SignUp(@RequestBody UserSignUpRequest request){
+        UserResponse ur = um.SignUp(request.getName(), request.getPwd(), request.getDateOfBirth(), request.getBranch(), request.getRank());
+        if(ur.getResultCodes() == ResultCodes.SUCCESS){
+            return ResponseEntity.ok(ur);
+        }else{
+            return ResponseEntity.status(500).body(ur);
+        }
     }
 }
