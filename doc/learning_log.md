@@ -15,3 +15,14 @@
 > sh: 1: vite: not found 
 
 로 안되는 현상 => npm install해야함
+
+### 26.09.12
+로그인 구현 UI는 AI 에이전트에게 맡김 근데 API설계를 몰라서 공부해야함.
+- API예제로 spring boots 사용할 예정
+- 우선 api는 api/login처럼 동작으로 작성하는게 아니라 api/user 같은 자원 위주로 작성하는게 좋다고 함.
+- 그래서 Server에 spring boots 깔고 기존 Server 코드들은 참고만 하는 식으로 해야겠음.
+- ~~아직 Repository DB도 못했어...~~
+- 일단 지금은 프론트앤드에서 fetch를 통해 HTTP request 보내는 것 까진 만들었는데 백엔드의 API 주소? 와 매핑? 매칭 하는걸 이해 못하겠음.
+
+gredlew? ㅡ 를 통해 의존성을 추가하는 방식이라고 함
+- spring boots는 JSON을 우리가 직접 안만들어도 자동으로 자바 객체를 JSON으로 변환해서 HTTP Response를 보내준다!!
