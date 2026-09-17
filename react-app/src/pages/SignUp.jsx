@@ -5,30 +5,55 @@ function SignUp() {
   const [form, setForm] = useState({
     name: '',
     birthDate: '',
-    affiliation: '',
-    rank: '',
+    affiliation: '0',
+    rank: '0',
     password: '',
     confirmPassword: '',
   });
 
+  const rankList = 
+    ['이등병', '일등병', '상등병', '병장', '하사', '중사', '상사', '원사', '준위', '소위', '중위', '대위'].map((i, index)=>{
+      return({
+        id : index,
+        name : i
+      })
+    });
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({
-      ...prev,
+    const nextForm ={
+      ...form,
       [name]: value,
-    }));
+    }
+    console.log(nextForm)
+    setForm(nextForm);
   };
 
-  const handleSubmit = (event) => {
+  async const handleSubmit = (event) => {
     event.preventDefault();
 
     if (form.password !== form.confirmPassword) {
       alert('비밀번호와 비밀번호 재입력이 일치하지 않습니다.');
       return;
     }
+    else{
+      try {
+        const response = await fetch("https://miniature-space-engine-9wwjw6pq7jvc9v9v-8080.app.github.dev/api/users",{
+        method : 'POST',
+        header : {
+          'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(form)
+      })
+      } catch (error) {
+        
+      }
 
-    console.log('회원가입 데이터:', form);
-    alert('회원가입 요청이 접수되었습니다.');
+      console.log('회원가입 데이터:', form);
+      alert('회원가입 요청이 접수되었습니다.');
+    }
+
+
   };
 
   return (
@@ -99,28 +124,25 @@ function SignUp() {
 
               <label className="input-group">
                 <span className="input-label">소속</span>
-                <input
-                  type="text"
-                  className="text-input"
-                  name="affiliation"
-                  placeholder="예: 제1작전사령부"
-                  value={form.affiliation}
-                  onChange={handleChange}
-                  required
-                />
+                <select name="affiliation" className="text-input" onChange = {handleChange}>
+                  <option className="text-input" value = "0">육군</option>
+                  <option className="text-input" value = "1">해군</option>
+                  <option className="text-input" value = "2">공군</option>
+                </select>
               </label>
 
               <label className="input-group">
                 <span className="input-label">계급</span>
-                <input
-                  type="text"
-                  className="text-input"
-                  name="rank"
-                  placeholder="예: 중령"
-                  value={form.rank}
-                  onChange={handleChange}
-                  required
-                />
+                <select name="rank" className="text-input" onChange = {handleChange}>
+                  {
+                    rankList.map((i)=>{
+                      return(
+                       <option value={i.id} key = {i.id}>{i.name}</option>
+                      )
+                    })
+                  }
+                </select>
+
               </label>
 
               <label className="input-group">

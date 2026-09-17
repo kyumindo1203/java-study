@@ -3,12 +3,14 @@ package com.example.demo.Server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.lang.StringBuilder;
 
+@Service
 public class UserManager {
     Map<String, User> userMap;
 
